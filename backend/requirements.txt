@@ -1,12 +1,15 @@
-# pip freeze --local > ./requirements.txt
-asgiref==3.6.0
-Django==3.2.18
-django-filter==22.1
-djangorestframework==3.14.0
-djangorestframework-simplejwt==5.2.2
-gunicorn==20.1.0
-psycopg2-binary==2.9.5
-PyJWT==2.6.0
-pytz==2022.7.1
-sqlparse==0.4.3
-typing_extensions==4.5.0
+Django==2.2.19
+django-extra-fields==3.0.2
+djangorestframework==3.12.4
+Pillow==8.3.1
+PyJWT==2.1.0
+requests==2.26.0
+djoser==2.1.0
+djangorestframework-simplejwt==4.8.0
+django-filter==2.4.0
+gunicorn==20.0.4
+psycopg2-binary==2.8.6
+asgiref==3.2.10
+pytz==2020.1
+sqlparse==0.3.1
+python-dotenv==0.19.0

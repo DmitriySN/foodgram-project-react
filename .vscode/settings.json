@@ -1,11 +1,14 @@
 {
-    "sqltools.useNodeRuntime": true,
-    "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "driver": "SQLite",
-            "database": "${workspaceFolder:foodgram-project-react}/backend/db.sqlite3",
-            "name": "foodgram"
-        }
-    ]
+  "sqltools.useNodeRuntime": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "sqll",
+      "database": "${workspaceFolder:foodgram-project-react}/backend/db.sqlite3"
+    }
+  ],
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.banditEnabled": false,
 }
