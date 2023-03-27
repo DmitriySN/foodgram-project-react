@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
@@ -103,33 +104,22 @@ class RecipesViewSet(CreateUpdateRetrieveViewSet):
         recipe.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['GET'],
-            permission_classes=[IsAuthenticated])
+    @action(detail=False)
     def download_shopping_cart(self, request):
-        final_list = {}
-        ingredients = IngredientRecipe.objects.filter(
-            recipe__shoppingcart__user=request.user).values_list(
-            'ingredient__name',
-            'ingredient__measurement_unit',
-            'amount')
-
-        for ingredient in ingredients:
-            name = ingredient[0]
-            if name not in final_list:
-                final_list[name] = {
-                    'Единица измерения': ingredient[1],
-                    'Количество ингредиента': ingredient[2]
-                }
-            else:
-                final_list[name]['amount'] == ingredient[2]
+        ingredient_list = IngredientRecipe.objects.filter(
+            recipe__carts__user=request.user
+        ).order_by('ingredient__name').values(
+            'ingredient__name', 'ingredient__measurement_unit'
+        ).annotate(amount_total=Sum('amount'))
+        to_buy = []
+        for ingredient in ingredient_list:
+            cart_str = (
+                ingredient['ingredient__name'] + ' ('
+                + ingredient['ingredient__measurement_unit'] + ') кол-во: '
+                + str(ingredient['amount_total']) + '\n'
+            )
+            to_buy.append(cart_str)
         response = HttpResponse(content_type='text/plain')
-        response['Content-Disposition'] = (
-            'attachment; filename=you-cart.txt')
-
-        for key in final_list.keys():
-            data = final_list.get(key)
-            unit = data.get('Единица измерения')
-            value = data.get('Количество ингредиента')
-            newline = '\n'
-            response.write(f'{key}: {value} {unit}.{newline}')
+        response["Content-Disposition"] = "attachment; filename=cart-list.txt"
+        response.writelines(to_buy)
         return response

@@ -16,6 +16,18 @@ class UserViewSet(UserViewSet):
     serializer_class = CustomUserSerializer
 
     @action(
+        detail=False, methods=['GET'],
+        permission_classes=[IsAuthenticated],
+        pagination_class=CustomPagination
+    )
+    def subscriptions(self, request):
+        user = request.user
+        following = Subscribe.objects.filter(user=user)
+        pagination = self.paginate_queryset(following)
+        serializer = SubscribeSerializer(pagination, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    @action(
         detail=True, methods=['POST', 'DELETE'],
         permission_classes=[IsAuthenticated]
     )
@@ -46,15 +58,3 @@ class UserViewSet(UserViewSet):
             if follow.exists():
                 follow.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(
-        detail=False, methods=['GET'],
-        permission_classes=[IsAuthenticated],
-        pagination_class=CustomPagination
-    )
-    def subscriptions(self, request):
-        user = request.user
-        following = Subscribe.objects.filter(user=user)
-        pagination = self.paginate_queryset(following)
-        serializer = SubscribeSerializer(pagination, many=True)
-        return self.get_paginated_response(serializer.data)

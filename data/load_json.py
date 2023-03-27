@@ -1,9 +1,13 @@
+""" Загрузка списка ингредиентов в пустую базу """
 import json
+from pathlib import Path
 import sqlite3
 
-conn = sqlite3.connect("../backend/db.sqlite3")
+conn = sqlite3.connect(Path("backend", "db.sqlite3"))
 
-newegg_json = json.load(open("../data/ingredients.json", encoding="utf-8-sig"))
+newegg_json = json.load(open(
+    Path("data", "ingredients.json"), encoding="utf-8-sig")
+)
 
 columns = []
 column = []
