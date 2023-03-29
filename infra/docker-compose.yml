@@ -5,13 +5,13 @@ services:
     container_name: postgresql-server
     image: postgres:13.0-alpine
     volumes:
-      - /var/lib/postgresql/data/
+      - db_value:/var/lib/postgresql/data/
     env_file:
       - ./.env
 
-  web:
-    container_name: api_foodgram
-    build: ../backend/
+  backend:
+    container_name: backend_foodgram
+    build: dmitriysn/backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -19,8 +19,15 @@ services:
     depends_on:
       - db
     env_file:
-      - .env
+      - ./.env
 
+  frontend:
+    container_name: frontend_foodgram
+    image: dmitriysn/frontend:latest
+    volumes:
+      - ./frontend/:/app/result_build/
+    depends_on:
+      - backend
 
   nginx:
     container_name: nginx
@@ -29,13 +36,15 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
+      - ./frontend/build:/usr/share/nginx/html/
+      - ./docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
-      - web
+      - frontend
+      - backend
 
 volumes:
   static_value:
   media_value:
+  db_value:
