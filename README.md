@@ -100,33 +100,18 @@ exit
 docker-compose down -v
 ```
 
-### Для запуска на боевом сервере необходимо:
-
-```
-Остановите службу nginx чтобы высвободить 80 порт
-sudo systemctl stop nginx
-
-Установите docker и docker-compose
-sudo apt install docker.io docker-compose -y
-
-Скопируйте файлы docker-compose.yaml и nginx/default.conf и redoc.yaml из вашего проекта на сервер в home/<ваш_username>/docker-compose.yaml и home/<ваш_username>/nginx/default.conf соответственно.
-
-Выполните копирование файла redoc в директорию статики для работы документации
-sudo docker-compose exec web cp redoc.yaml /static/redoc.yaml
-```
-
 ### Запуск проекта в dev-режиме
 
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone https://github.com/DmitriySN/yamdb_final
+git clone https://github.com/DmitriySN/foodgram-project-react
 ```
 
 Войти в рабочий каталог:
 
 ```
-cd yamdb_final
+cd foodgram-project-react/backend
 ```
 
 Cоздать и активировать виртуальное окружение например:
@@ -147,13 +132,13 @@ python -m pip install --upgrade pip
 ```
 
 ```
-pip install -r api_yamdb/requirements.txt
+pip install -r foodgram-project-react/backend/requirements.txt
 ```
 
 Выполнить миграции:
 
 ```
-cd api_yamdb
+cd foodgram-project-react/backend
 python manage.py makemigrations
 python manage.py migrate
 ```
