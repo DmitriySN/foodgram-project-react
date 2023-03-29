@@ -1,11 +1,15 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from recipes.models import (
     Cart, Favorite, Ingredient, IngredientRecipe, Recipe, Tag
 )
-from rest_framework import serializers
-from users.models import Subscribe, User
+from users.models import Subscribe
+
+User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
@@ -14,10 +18,11 @@ class CustomUserSerializer(UserSerializer):
     password = serializers.CharField(write_only=True)
     is_subscribed = serializers.SerializerMethodField()
 
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'username',
-                  'first_name', 'last_name', 'password', 'is_subscribed')
+    def validate_email(self, value):
+        lower_email = value.lower()
+        if User.objects.filter(email__iexact=lower_email).exists():
+            raise serializers.ValidationError("Email уже существует в базе!")
+        return lower_email
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
@@ -26,6 +31,11 @@ class CustomUserSerializer(UserSerializer):
     def get_is_subscribed(self, obj):
         user = User.objects.get(pk=1)
         return Subscribe.objects.filter(user=user, author=obj.id).exists()
+
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'username',
+                  'first_name', 'last_name', 'password', 'is_subscribed')
 
 
 class TagSerializer(serializers.ModelSerializer):

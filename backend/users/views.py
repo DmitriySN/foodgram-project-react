@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from api.paginators import CustomPagination
 from api.serializers import CustomUserSerializer, SubscribeSerializer
 from django.shortcuts import get_object_or_404
@@ -7,7 +8,9 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Subscribe, User
+from .models import Subscribe
+
+User = get_user_model()
 
 
 class UserViewSet(UserViewSet):

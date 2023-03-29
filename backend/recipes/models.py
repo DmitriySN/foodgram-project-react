@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
-from users.models import User
+
+User = get_user_model()
 
 
 class Ingredient(models.Model):
@@ -161,7 +163,7 @@ class IngredientRecipe(models.Model):
         default=1,
         validators=[
             MinValueValidator(
-                1, "Время приготовления не может быть менше минуты."
+                1, "Количество ингредиентов не может быть менше одного."
             ),
         ],
         verbose_name="Количество ингредиента",
