@@ -1,28 +1,28 @@
 ![This is an image](https://github.com/DmitriySN/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
-# CI и CD проекта api_yamdb - 16 спринт
-## Ссылка на тестовый сервер [Попробовать открыть](http://sdn7177.ddns.net/admin)
-## Развертывание проекта в контейнерах Docker
+# Проект Foodgram
+## Ссылка на тестовый сервер [Попробовать открыть](http://practikum.ddns.net/admin)
 
 ### Описание
-REST API YamDB - база отзывов пользователей о фильмах, книгах и музыке.
+Проект обмена рецептов для приготовления между пользователями
 
 ### Технологии
 
 ```
-pytest==6.2.5
-pytest-django==4.4.0
-pytest-pythonpath==0.7.4
-python-dotenv==0.21.1
-asgiref==3.2.10
-Django==2.2.16
-django-filter==2.4.0
+Django==2.2.19
+django-extra-fields==3.0.2
 djangorestframework==3.12.4
+Pillow==8.3.1
+PyJWT==2.1.0
+requests==2.26.0
+djoser==2.1.0
 djangorestframework-simplejwt==4.8.0
+django-filter==2.4.0
 gunicorn==20.0.4
 psycopg2-binary==2.8.6
-PyJWT==2.1.0
+asgiref==3.2.10
 pytz==2020.1
 sqlparse==0.3.1
+python-dotenv==0.19.0
 ```
 
 Rest API
@@ -34,11 +34,11 @@ Docker-compose
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone https://github.com/DmitriySN/yamdb_final
+git clone https://github.com/DmitriySN/foodgram-project-react.git
 Установить переменные secrets в настройках на GitHUB
 ```
 
-Запустить терминал перейти в каталог с файлом /yamdb_final/infra/docker-compose.yaml
+Запустить терминал перейти в каталог с файлом foodgram-project-react/infra/docker-compose.yaml
 пересобрать контейнеры и запустить
 
 ```
@@ -54,7 +54,7 @@ sudo docker-compose exec web python manage.py createsuperuser
 sudo docker-compose exec web python manage.py collectstatic --no-input
 ```
 
-Создать переменные окружения в каталоге yamdb_final/infra/ создайте файл .env
+Создать переменные окружения в каталоге foodgram-project-react/infra/ создайте файл .env
 
 ```
 SECRET_KEY='12345' # укажите секретняй ключ (установите свой)
@@ -71,12 +71,6 @@ DB_PORT=5432 # порт для подключения к БД
 
 ```
 http://<ip адрес или имя домена>/admin/
-```
-
-Создание дампа bd выполнялось в каталоге yamdb_final/infra/ командой
-
-```
-docker-compose exec web python manage.py dumpdata > fixtures.json
 ```
 
 Для восстановления Необходимо узнать id контейнера с django и залить базу
