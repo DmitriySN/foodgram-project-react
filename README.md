@@ -1,6 +1,8 @@
-![This is an image](https://github.com/DmitriySN/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+![This is an image](https://github.com/DmitriySN/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)
 # Проект Foodgram
-## Ссылка на тестовый сервер [Попробовать открыть](http://practikum.ddns.net/admin)
+## Ссылка на сервер [Попробовать открыть](http://practikum.ddns.net)
+## Ссылка на админ панель сервера [Попробовать открыть](http://practikum.ddns.net/admin)
+
 доступ в админку:
 Логин: test@test.ru
 Пароль: 12345678qQ
@@ -79,11 +81,15 @@ http://<ip адрес или имя домена>/admin/
 Для восстановления Необходимо узнать id контейнера с django и залить базу
 
 ```
+Дамп был сделан:
+python manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
+```
+Загрузка из дампа
+
+```
 docker container ls -a
-docker cp fixtures.json <CONTAINER ID>:/app
-# Предварительно настроено имя в docker-compose можно указать или сразу так
-docker cp fixtures.json api_yamdb_django:/app
-docker-compose exec web python manage.py loaddata fixtures.json
+docker cp db.json <CONTAINER ID>:/app
+docker-compose exec web python manage.py loaddata db.json
 
 ```
 
@@ -93,7 +99,7 @@ docker-compose exec web python manage.py loaddata fixtures.json
 docker exec -it <CONTAINER ID> bash
 # или
 docker exec -it api_yamdb_django bash
-rm fixtures.json
+rm db.json
 exit
 ```
 
@@ -148,10 +154,11 @@ python manage.py migrate
 
 По необходимости заполнить базу:
 ```
-python manage.py loaddata ../infra/fixtures.json
+python manage.py loaddata db.json
 ```
 
 Создать суперпользователя и статику:
+Имя и пароль текущего суперпользователя из дампа смотрите вверху
 
 ```
 python manage.py createsuperuser
