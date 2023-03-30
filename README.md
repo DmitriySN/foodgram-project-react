@@ -1,6 +1,9 @@
 ![This is an image](https://github.com/DmitriySN/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 # Проект Foodgram
 ## Ссылка на тестовый сервер [Попробовать открыть](http://practikum.ddns.net/admin)
+доступ в админку:
+Логин: test@test.ru
+Пароль: 12345678qQ
 
 ### Описание
 Проект обмена рецептов для приготовления между пользователями
