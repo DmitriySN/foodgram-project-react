@@ -1,4 +1,4 @@
-![This is an image](https://github.com/DmitriySN/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)
+![This is an image](https://github.com/DmitriySN/foodgram-project-react/actions/workflows/foodgram.yml/badge.svg)
 # Проект Foodgram
 ## Ссылка на сервер [Попробовать открыть](http://practikum.ddns.net)
 ## Ссылка на админ панель сервера [Попробовать открыть](http://practikum.ddns.net/admin)
