@@ -25,10 +25,17 @@ class UserViewSet(UserViewSet):
         pagination_class=CustomPagination
     )
     def subscriptions(self, request):
-        user = request.user
-        following = Subscribe.objects.filter(user=user)
+        # user = request.user
+        following = User.objects.filter(
+            id__in=request.user.follower.values_list('author', flat=True)
+        ).order_by('pk')
+        recipes_limit = self.request.query_params.get('recipes_limit')
+        # following = Subscribe.objects.filter(user=user)
         pagination = self.paginate_queryset(following)
-        serializer = SubscribeSerializer(pagination, many=True)
+        serializer = SubscribeSerializer(
+            pagination, many=True,
+            context={'request': request, 'recipes_limit': recipes_limit}
+        )
         return self.get_paginated_response(serializer.data)
 
     @action(

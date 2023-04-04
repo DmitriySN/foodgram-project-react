@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', default='123456')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG_STATUS', default=False)
+DEBUG = os.getenv('DEBUG_STATUS', default=True)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS_LIST', default=['*'])
 
