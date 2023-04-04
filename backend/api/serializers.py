@@ -29,8 +29,11 @@ class CustomUserSerializer(UserSerializer):
         return super(CustomUserSerializer, self).create(validated_data)
 
     def get_is_subscribed(self, obj):
-        user = User.objects.get(pk=1)
-        return Subscribe.objects.filter(user=user, author=obj.id).exists()
+        if self.context['request'].user.is_authenticated:
+            return Subscribe.objects.filter(
+                author=obj, user=self.context['request'].user
+            ).exists()
+        return False
 
     class Meta:
         model = User
@@ -140,8 +143,3 @@ class SubscribeSerializer(CustomUserSerializer):
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()
-
-    def get_is_subscribed(self, obj):
-        return Subscribe.objects.filter(
-            user=obj.user, author=obj.author
-        ).exists()
