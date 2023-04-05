@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from api.paginators import CustomPagination
 from api.serializers import CustomUserSerializer, SubscribeSerializer
@@ -55,11 +56,12 @@ class UserViewSet(UserViewSet):
                 )
             else:
                 Subscribe.objects.create(user=user, author=author)
-                follow = Subscribe.objects.get(user=user, author=author)
-                serializer = SubscribeSerializer(follow)
-                return Response(
-                    data=serializer.data, status=status.HTTP_201_CREATED
-                )
+                return Response(HTTPStatus.CREATED)
+                # follow = Subscribe.objects.get(user=user, author=author)
+                # serializer = SubscribeSerializer(follow)
+                # return Response(
+                #     data=serializer.data, status=status.HTTP_201_CREATED
+                # )
 
         if request.method == 'DELETE':
             follow = Subscribe.objects.filter(user=user, author=author)
