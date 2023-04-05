@@ -1,4 +1,5 @@
 from http import HTTPStatus
+
 from django.contrib.auth import get_user_model
 from api.paginators import CustomPagination
 from api.serializers import CustomUserSerializer, SubscribeSerializer
