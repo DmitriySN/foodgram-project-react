@@ -10,22 +10,30 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-
 from .models import Subscribe
 
 User = get_user_model()
 
 
-class UserViewSet(UserViewSet):
+class UsersViewSet(UserViewSet):
+    queryset = Subscribe.objects.all()
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
     serializer_class = CustomUserSerializer
+
+    @action(detail=False)
+    def test_action(self, request):
+        return Response("test_action")
+    # Все вроде работает но почемуто subscriptions выдает 404 и тестовый
+    # test_action тоже, наставники в этой кагорте не помогают
+    # просьба посоветовать что делаю не так где косяк. Убил кучу времени
 
     @action(
         detail=False, methods=['GET'],
         permission_classes=[IsAuthenticated],
         pagination_class=CustomPagination
     )
+    @action(detail=False)
     def subscriptions(self, request):
         following = Subscribe.objects.filter(
             user=request.user).select_related('author').order_by('pk')
@@ -58,11 +66,6 @@ class UserViewSet(UserViewSet):
             else:
                 Subscribe.objects.create(user=user, author=author)
                 return Response(HTTPStatus.CREATED)
-                # follow = Subscribe.objects.get(user=user, author=author)
-                # serializer = SubscribeSerializer(follow)
-                # return Response(
-                #     data=serializer.data, status=status.HTTP_201_CREATED
-                # )
 
         if request.method == 'DELETE':
             follow = Subscribe.objects.filter(user=user, author=author)

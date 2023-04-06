@@ -81,8 +81,13 @@ http://<ip адрес или имя домена>/admin/
 Для восстановления Необходимо узнать id контейнера с django и залить базу
 
 ```
-Дамп был сделан:
+Дамп может быть сделан примерно так:
+
+Всю бд:
 python manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
+
+конкретную таблицу например ingredient:
+python manage.py dumpdata recipes.ingredient > recipes_ingredient.json
 ```
 Загрузка из дампа
 

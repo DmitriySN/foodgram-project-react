@@ -127,13 +127,6 @@ class SubscribeSerializer(CustomUserSerializer):
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
-    class Meta:
-        model = User
-        fields = (
-            'email', 'id', 'username', 'first_name',
-            'last_name', 'recipes', 'recipes_count', 'is_subscribed'
-        )
-
     def get_recipes(self, obj):
         queryset = Recipe.objects.filter(author=obj)
         if 'recipes_limit' in self.context:
@@ -143,3 +136,10 @@ class SubscribeSerializer(CustomUserSerializer):
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'id', 'username', 'first_name',
+            'last_name', 'recipes', 'recipes_count', 'is_subscribed'
+        )
