@@ -1,17 +1,16 @@
 from django.contrib.auth import get_user_model
-from django_filters import rest_framework as filters
-from rest_framework import filters as rst_filters
+from django_filters import rest_framework as django_filter
 
-from recipes.models import Recipe
+from recipes.models import Ingredient, Recipe
 
 User = get_user_model()
 
 
-class RecipeFilter(filters.FilterSet):
-    tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
-    author = filters.ModelChoiceFilter(queryset=User.objects.all())
-    is_favorited = filters.BooleanFilter(method='filter_favorite')
-    is_in_shopping_cart = filters.BooleanFilter(
+class RecipeFilter(django_filter.FilterSet):
+    tags = django_filter.AllValuesMultipleFilter(field_name='tags__slug')
+    author = django_filter.ModelChoiceFilter(queryset=User.objects.all())
+    is_favorited = django_filter.BooleanFilter(method='filter_favorite')
+    is_in_shopping_cart = django_filter.BooleanFilter(
         method='filter_cart')
 
     def filter_favorite(self, queryset, name, value):
@@ -29,6 +28,11 @@ class RecipeFilter(filters.FilterSet):
         fields = ('is_favorited', 'is_in_shopping_cart', 'tags', 'author')
 
 
-class IngredientSearchFilter(rst_filters.SearchFilter):
+class IngredientSearchFilter(django_filter.FilterSet):
+    name = django_filter.ModelChoiceFilter(queryset=Ingredient.objects.all())
 
     search_param = 'name'
+
+    class Meta:
+        model = Ingredient
+        fields = ('name', 'measurement_unit')
