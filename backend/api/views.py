@@ -2,7 +2,7 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -28,14 +28,11 @@ class TagViewSet(CreateUpdateRetrieveViewSet):
     serializer_class = TagSerializer
 
 
-class IngredientViewSet(CreateUpdateRetrieveViewSet):
+class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
-    permission_classes = [AuthorOrReadOnly]
     serializer_class = IngredientSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = IngredientSearchFilter
-    pagination_class = None
-    search_fields = ['^name', ]
 
 
 class RecipesViewSet(CreateUpdateRetrieveViewSet):

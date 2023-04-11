@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django_filters import rest_framework as django_filter
+from django_filters import rest_framework as filters
 
 from recipes.models import Ingredient, Recipe
 
@@ -28,11 +29,9 @@ class RecipeFilter(django_filter.FilterSet):
         fields = ('is_favorited', 'is_in_shopping_cart', 'tags', 'author')
 
 
-class IngredientSearchFilter(django_filter.FilterSet):
-    name = django_filter.ModelChoiceFilter(queryset=Ingredient.objects.all())
-
-    search_param = 'name'
+class IngredientSearchFilter(filters.FilterSet):
+    name = filters.CharFilter(lookup_expr='icontains')
 
     class Meta:
         model = Ingredient
-        fields = ('name', 'measurement_unit')
+        fields = ['name']
