@@ -21,22 +21,14 @@ class UsersViewSet(UserViewSet):
     pagination_class = CustomPagination
     serializer_class = CustomUserSerializer
 
-    @action(detail=False)
-    def test_action(self, request):
-        return Response("test_action")
-    # Все вроде работает но почемуто subscriptions выдает 404 и тестовый
-    # test_action тоже, наставники в этой кагорте не помогают
-    # просьба посоветовать что делаю не так где косяк. Убил кучу времени
-
     @action(
         detail=False, methods=['GET'],
         permission_classes=[IsAuthenticated],
         pagination_class=CustomPagination
     )
-    @action(detail=False)
     def subscriptions(self, request):
-        following = Subscribe.objects.filter(
-            user=request.user).select_related('author').order_by('pk')
+        following = User.objects.filter(
+            following__user=request.user).order_by('pk')
         recipes_limit = self.request.query_params.get('recipes_limit')
         pagination = self.paginate_queryset(following)
         serializer = SubscribeSerializer(
@@ -58,15 +50,15 @@ class UsersViewSet(UserViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         if request.method == 'POST':
-            if Subscribe.objects.filter(user=user, author=author).exists():
-                return Response(
-                    {'errors': 'Вы уже подписаны'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            else:
-                Subscribe.objects.create(user=user, author=author)
+            obj, created = Subscribe.objects.get_or_create(
+                user=user, author=author
+            )
+            if created:
                 return Response(HTTPStatus.CREATED)
-
+            return Response(
+                {'errors': 'Вы уже подписаны'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         if request.method == 'DELETE':
             follow = Subscribe.objects.filter(user=user, author=author)
             if follow.exists():

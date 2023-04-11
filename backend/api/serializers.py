@@ -37,8 +37,10 @@ class CustomUserSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username',
-                  'first_name', 'last_name', 'password', 'is_subscribed')
+        fields = (
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'password', 'is_subscribed'
+        )
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -124,6 +126,14 @@ class SubscriptionsRecipeSerializer(serializers.ModelSerializer):
 
 
 class SubscribeSerializer(CustomUserSerializer):
+    email = serializers.ReadOnlyField(source='author.email')
+    id = serializers.ReadOnlyField(source='author.id')
+    username = serializers.ReadOnlyField(source='author.username')
+    first_name = serializers.ReadOnlyField(source='author.first_name')
+    last_name = serializers.ReadOnlyField(source='author.last_name')
+    is_subscribed = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 

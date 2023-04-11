@@ -30,6 +30,10 @@ class User(AbstractUser):
         verbose_name='Пароль', max_length=150,
     )
 
+    def clean(self):
+        super().clean()
+        self.email_lower = self.email.lower()
+
     class Meta:
         unique_together = ('email',)
         ordering = ('username',)

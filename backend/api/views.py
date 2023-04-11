@@ -1,10 +1,9 @@
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -12,7 +11,7 @@ from recipes.models import (
     Cart, Favorite, Ingredient, IngredientRecipe, Recipe, Tag
 )
 
-from .filters import RecipeFilter
+from .filters import IngredientSearchFilter, RecipeFilter
 from .mixins import CreateUpdateRetrieveViewSet
 from .paginators import CustomPagination
 from .permissions import AuthorOrReadOnly
@@ -32,8 +31,8 @@ class TagViewSet(CreateUpdateRetrieveViewSet):
 class IngredientViewSet(CreateUpdateRetrieveViewSet):
     queryset = Ingredient.objects.all().order_by('pk')
     serializer_class = IngredientSerializer
-    filter_backends = (SearchFilter,)
-    search_fields = ('^name',)
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = IngredientSearchFilter
 
 
 class RecipesViewSet(CreateUpdateRetrieveViewSet):
@@ -41,7 +40,7 @@ class RecipesViewSet(CreateUpdateRetrieveViewSet):
     serializer_class = RecipeSerializer
     permission_classes = [AuthorOrReadOnly]
     pagination_class = CustomPagination
-    filter_backends = [filters.DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
     def perform_create(self, serializer):
