@@ -33,6 +33,8 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS_LIST', default=['*'])
 
 AUTH_USER_MODEL = 'users.User'
 
+AUTHENTICATION_BACKENDS = ('users.auth_backends.CaseInsensitiveModelBackendEmail',)
+
 # Application definition
 
 INSTALLED_APPS = [
