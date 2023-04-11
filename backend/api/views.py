@@ -29,10 +29,13 @@ class TagViewSet(CreateUpdateRetrieveViewSet):
 
 
 class IngredientViewSet(CreateUpdateRetrieveViewSet):
-    queryset = Ingredient.objects.all().order_by('pk')
+    queryset = Ingredient.objects.all()
+    permission_classes = [AuthorOrReadOnly]
     serializer_class = IngredientSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = IngredientSearchFilter
+    pagination_class = None
+    search_fields = ['^name', ]
 
 
 class RecipesViewSet(CreateUpdateRetrieveViewSet):
